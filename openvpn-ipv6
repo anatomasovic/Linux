@@ -1,0 +1,53 @@
+# /etc/openvpn/server.conf
+# Used on a server acting as a gateway for IPv6
+
+port 1194
+proto udp6
+tls-server
+dev tun
+ca ca.crt
+cert EasyRSA.crt
+dh dh2048.pem
+-> server 192.168.200.0 255.255.255.0
+-> server-ipv6 2001:470:1f0a:d79:10::/112 
+ifconfig-pool-persist ipp.txt
+push "dhcp-option DNS 208.67.222.222"
+push "dhcp-option DNS 208.67.220.220"
+keepalive 10 120
+user nobody
+group nogroup
+persist-key
+persist-tun
+status openvpn-status.log
+verb 4
+mute 20
+mute-replay-warnings
+tun-mtu 1480
+fragment 1428
+mssfix 1428
+push "dhcp-option DNS 2001:470:20::2"
+sndbuf 212992
+rcvbuf 212992
+push "sndbuf 212992"
+push "rcvbuf 212992"
+-> push "route-ipv6 2000::/3"
+
+# ifconfig output for this
+
+he-ipv6   Link encap:IPv6-in-IPv4  
+          inet6 addr: 2001:470:1f0a:d79::2/64 Scope:Global
+          inet6 addr: fe80::2d4c:549e/64 Scope:Link
+          UP POINTOPOINT RUNNING NOARP  MTU:1480  Metric:1
+          RX packets:226397 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:128213 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:328676262 (328.6 MB)  TX bytes:10059606 (10.0 MB)
+          
+tun0      Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  
+          inet addr:192.168.200.1  P-t-P:192.168.200.2  Mask:255.255.255.255
+          inet6 addr: 2001:470:1f0a:d79:10::1/112 Scope:Global
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1480  Metric:1
+          RX packets:272 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:244 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:100 
+          RX bytes:45767 (45.7 KB)  TX bytes:82141 (82.1 KB)
